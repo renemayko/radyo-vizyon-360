@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radyo Vizyon 360</title>
+  <style>
+    :root {
+      --purple: #6435a5;
+      --blue: #173c78;
+      --background: #f5f3fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--background);
+      color: #25243a;
+    }
+    header {
+      background: linear-gradient(120deg, var(--blue), var(--purple));
+      color: white;
+      padding: 35px 20px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.3rem; margin-bottom: 10px; }
+    .language {
+      margin-top: 20px;
+    }
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .language button {
+      background: white;
+      color: var(--blue);
+      margin: 5px;
+    }
+    main {
+      max-width: 1000px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+    section {
+      background: white;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #00000012;
+    }
+    h2 { color: var(--purple); }
+    .live {
+      text-align: center;
+      border: 2px solid var(--purple);
+    }
+    .live button {
+      background: var(--purple);
+      color: white;
+      font-size: 1rem;
+    }
+    .notice {
+      color: #655c74;
+      font-size: 0.9rem;
+    }
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: var(--blue);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎙️ RADYO VIZYON 360</h1>
+  <p id="slogan">Yon sèl radyo, tout pèspektiv!</p>
+  <div class="language">
+    <button onclick="setLanguage('ht')">🇭🇹 Kreyòl</button>
+    <button onclick="setLanguage('fr')">🇫🇷 Français</button>
+  </div>
+</header>
+
+<main>
+  <section class="live">
+    <h2 id="liveTitle">🔴 Koute Radyo a</h2>
+    <p id="liveText">Byenveni sou Radyo Vizyon 360!</p>
+    <button id="listenButton" disabled>▶ Koute LIVE</button>
+    <p class="notice" id="liveNotice">
+      Difizyon an poko aktive. N ap prepare estidyo dijital la.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="newsTitle">📰 Aktyalite</h2>
+    <p id="newsText">
+      Nouvèl Ayiti ak entènasyonal ap disponib isit la
+      apre verifikasyon ekip redaksyon an.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="programTitle">📅 Pwogram nou yo</h2>
+    <p id="programText">
+      Nou ap prepare 2 èdtan emisyon pa jou:
+      nouvèl, analiz, edikasyon sivik, kilti ak Leson Lavi.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="aboutTitle">🌍 Konsènan nou</h2>
+    <p id="aboutText">
+      Radyo Vizyon 360 se yon pwojè medya dijital
+      pou Ayiti ak diaspora, devlope anba MaykoGPT Studios.
+      Misyon nou se enfòme, edike epi ankouraje dyalòg.
+    </p>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Radyo Vizyon 360</p>
+  <p id="footerText">Yon sèl radyo, tout pèspektiv!</p>
+</footer>
+
+<script>
+  const translations = {
+    ht: {
+      slogan: "Yon sèl radyo, tout pèspektiv!",
+      liveTitle: "🔴 Koute Radyo a",
+      liveText: "Byenveni sou Radyo Vizyon 360!",
+      listenButton: "▶ Koute LIVE",
+      liveNotice: "Difizyon an poko aktive. N ap prepare estidyo dijital la.",
+      newsTitle: "📰 Aktyalite",
+      newsText: "Nouvèl Ayiti ak entènasyonal ap disponib isit la apre verifikasyon ekip redaksyon an.",
+      programTitle: "📅 Pwogram nou yo",
+      programText: "Nou ap prepare 2 èdtan emisyon pa jou: nouvèl, analiz, edikasyon sivik, kilti ak Leson Lavi.",
+      aboutTitle: "🌍 Konsènan nou",
+      aboutText: "Radyo Vizyon 360 se yon pwojè medya dijital pou Ayiti ak diaspora, devlope anba MaykoGPT Studios. Misyon nou se enfòme, edike epi ankouraje dyalòg.",
+      footerText: "Yon sèl radyo, tout pèspektiv!"
+    },
+    fr: {
+      slogan: "Une seule radio, toutes les perspectives !",
+      liveTitle: "🔴 Écouter la radio",
+      liveText: "Bienvenue sur Radio Vision 360 !",
+      listenButton: "▶ Écouter en direct",
+      liveNotice: "La diffusion n'est pas encore active. Notre studio numérique est en préparation.",
+      newsTitle: "📰 Actualités",
+      newsText: "Les actualités d'Haïti et du monde seront publiées ici après vérification éditoriale.",
+      programTitle: "📅 Nos programmes",
+      programText: "Nous préparons deux heures d'émissions par jour : actualités, analyses, éducation civique, culture et leçons de vie.",
+      aboutTitle: "🌍 À propos",
+      aboutText: "Radio Vision 360 est un projet de média numérique destiné à Haïti et à sa diaspora, développé par MaykoGPT Studios. Notre mission est d'informer, d'éduquer et d'encourager le dialogue.",
+      footerText: "Une seule radio, toutes les perspectives !"
+    }
+  };
+
+  function setLanguage(lang) {
+    document.documentElement.lang = lang;
+    for (const [id, value] of Object.entries(translations[lang])) {
+      document.getElementById(id).textContent = value;
+    }
+  }
+</script>
+
+</body>
+</html>
