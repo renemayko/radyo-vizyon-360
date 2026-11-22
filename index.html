@@ -88,24 +88,19 @@
   <section class="live">
     <h2 id="liveTitle">🔴 Koute Radyo a</h2>
     <p id="liveText">Byenveni sou Radyo Vizyon 360!</p>
-   <button id="listenButton">▶ Koute LIVE</button>
+  <button id="listenButton" onclick="document.querySelector('#radioPlayer audio').play()">▶ Koute LIVE</button>
     <p class="notice" id="liveNotice">
-      Difizyon an poko aktive. N ap prepare estidyo dijital la.
+     📻 Radyo Vizyon 360 sou antèn 24/24! Klike pou w Koute LIVE pou suiv emisyon nou yo.
     </p>
   </section>
 <div id="radioPlayer">
-<div data-type="newStreamPlayer"
-    data-publicToken="534728ed-c935-4b78-a42b-ee7b31bb1acb"
-    data-theme="light"
-    data-color="e81e4d"
-    data-channelId="a3482913-6801-4e0f-8b5f-3cbac446f99e"
-    data-rendered="false"
-    class="cstrEmbed">
-    <a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a>
-  </div>
+  <audio controls preload="none" style="width:100%;">
+    <source src="https://panel-eu-2.radiocast.net/listen/radyo-vizyon-360-244/radio.aac" type="audio/aac">
+    Navigatè ou pa sipòte jwè odyo a.
+  </audio>
 </div>
 
-<script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
+
   <section>
     <h2 id="newsTitle">📰 Aktyalite</h2>
     <p id="newsText">
@@ -144,7 +139,7 @@
       liveTitle: "🔴 Koute Radyo a",
       liveText: "Byenveni sou Radyo Vizyon 360!",
       listenButton: "▶ Koute LIVE",
-      liveNotice: "Difizyon an poko aktive. N ap prepare estidyo dijital la.",
+      liveNotice: "📻 Radyo Vizyon 360 sou antèn 24/24! Klike pou w Koute LIVE pou suiv emisyon nou yo.",
       newsTitle: "📰 Aktyalite",
       newsText: "Nouvèl Ayiti ak entènasyonal ap disponib isit la apre verifikasyon ekip redaksyon an.",
       programTitle: "📅 Pwogram nou yo",
@@ -158,7 +153,7 @@
       liveTitle: "🔴 Écouter la radio",
       liveText: "Bienvenue sur Radio Vision 360 !",
       listenButton: "▶ Écouter en direct",
-      liveNotice: "La diffusion n'est pas encore active. Notre studio numérique est en préparation.",
+      liveNotice: "📻 Radio Vision 360 est à l'antenne 24h/24 ! Cliquez sur Écouter en direct pour suivre nos émissions.",
       newsTitle: "📰 Actualités",
       newsText: "Les actualités d'Haïti et du monde seront publiées ici après vérification éditoriale.",
       programTitle: "📅 Nos programmes",
