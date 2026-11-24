@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Dashboard Animatè | Radyo Vizyon 360</title>
+  <style>
+    :root{--purple:#6435a5;--blue:#173c78;--ink:#242439;--light:#f5f3fa;--red:#ab2538;--green:#087a45}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--light);color:var(--ink);font:16px/1.5 Arial,sans-serif}
+    header{background:linear-gradient(120deg,var(--blue),var(--purple));color:#fff;text-align:center;padding:36px 16px}
+    h1{margin:0 0 8px;font-size:clamp(1.6rem,5vw,2.4rem)}
+    header p{margin:0;opacity:.9}
+    main{width:min(580px,calc(100% - 32px));margin:28px auto 60px}
+    section{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 6px 28px #120d2c10}
+    h2{margin:0 0 20px;color:var(--purple);font-size:1.3rem}
+    label{display:block;font-weight:700;margin:12px 0 5px}
+    input{display:block;border:1px solid #bbb4c9;border-radius:9px;width:100%;padding:13px;font:inherit}
+    button{padding:12px 20px;border:0;border-radius:9px;font:700 1rem Arial,sans-serif;cursor:pointer}
+    button:disabled{opacity:.47;cursor:not-allowed}
+    .primary{background:var(--purple);color:#fff;width:100%;margin-top:20px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+    .open{background:var(--green);color:#fff}.close{background:var(--red);color:#fff}
+    .status{font-size:1.1rem;border-radius:12px;background:#eeeaf4;padding:14px;text-align:center;font-weight:700}
+    .message{min-height:20px;margin:14px 0 0;font-weight:700;word-wrap:break-word}
+    .message.error{color:var(--red)}.message.success{color:var(--green)}
+    .subtle{font-size:.91rem;color:#595368}
+    .footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .signout{background:#ece8f4;color:var(--blue)}
+    a{color:var(--purple)}
+    [hidden]{display:none!important}
+    @media(max-width:420px){.actions{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎙️ RADYO VIZYON 360</h1>
+    <p>Espas animatè • Kontwòl apèl oditè yo</p>
+  </header>
+  <main>
+    <section id="loginSection">
+      <h2>🔐 Koneksyon animatè</h2>
+      <form id="loginForm">
+        <label for="email">Imèl animatè</label>
+        <input type="email" id="email" autocomplete="username" required placeholder="Imèl ou te kreye nan Firebase">
+        <label for="password">Modpas</label>
+        <input type="password" id="password" autocomplete="current-password" required placeholder="Modpas sekrè ou">
+        <button id="loginButton" class="primary" type="submit">Antre nan dashboard la</button>
+      </form>
+      <p class="subtle">Se kont ou te kreye nan Firebase Authentication la pou itilize. Pa pataje modpas ou.</p>
+    </section>
+
+    <section id="controlSection" hidden>
+      <div class="footer">
+        <h2>🎧 Kontwòl apèl yo</h2>
+        <button id="signOutButton" class="signout" type="button">Dekonekte</button>
+      </div>
+      <p class="subtle" id="signedInAs"></p>
+      <p id="status" class="status" aria-live="polite">⏳ N ap li estati apèl yo…</p>
+      <div class="actions">
+        <button type="button" id="openButton" class="open" disabled>🟢 OUVRI APÈL</button>
+        <button type="button" id="closeButton" class="close" disabled>🔴 FÈMEN APÈL</button>
+      </div>
+      <p class="subtle">Louvri apèl sèlman lè emisyon kote w ap resevwa oditè yo kòmanse. Fèmen yo lè sa fini. Chanjman yo ap parèt sou sit piblik la an tan reyèl.</p>
+      <p class="subtle"><strong>Enpòtan:</strong> Bouton sa yo kontwole si envitasyon WhatsApp la vizib. Yo pa konekte son apèl WhatsApp yo otomatikman sou antèn.</p>
+    </section>
+
+    <section>
+      <div class="footer"><strong>📻 Radyo Vizyon 360</strong><a href="./index.html">Retounen sou sit radyo a ↗</a></div>
+      <p class="subtle">Kontwòl sa a pa chanje ni kanpe Radiocast AutoDJ oubyen jwè Koute LIVE la.</p>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
+    import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyD4FFwUrUA4ENmVCGdjYw-_jHPmjaTUfWk',
+      authDomain: 'radyo-vizyon-360.firebaseapp.com',
+      databaseURL: 'https://radyo-vizyon-360-default-rtdb.firebaseio.com',
+      projectId: 'radyo-vizyon-360',
+      storageBucket: 'radyo-vizyon-360.firebasestorage.app',
+      messagingSenderId: '778239278735',
+      appId: '1:778239278735:web:857600d5a5dc226bd57afa',
+      measurementId: 'G-LW2L189Z8H'
+    };
+    const AUTHORIZED_EMAIL = 'renemayko747@gmail.com';
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const callsRef = ref(db, 'radioControls/callsOpen');
+    const $ = (id) => document.getElementById(id);
+    let currentValue = null;
+    let stopWatching = null;
+    let busy = false;
+    function feedback(text, isError = false) {
+      $('message').textContent = text;
+      $('message').className = 'message ' + (isError ? 'error' : 'success');
+    }
+    function renderStatus(value) {
+      currentValue = value;
+      $('status').textContent = value === true ? '🟢 APÈL OUVRI' : value === false ? '🔴 APÈL FÈMEN' : '⚠️ Estati a poko disponib';
+      $('openButton').disabled = busy || value === true || value === null;
+      $('closeButton').disabled = busy || value === false || value === null;
+    }
+    function reset() {
+      if (stopWatching) { stopWatching(); stopWatching = null; }
+      currentValue = null;
+      $('loginSection').hidden = false;
+      $('controlSection').hidden = true;
+      $('password').value = '';
+      $('loginButton').disabled = false;
+    }
+    $('loginForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      feedback('');
+      const email = $('email').value.trim().toLowerCase();
+      if (email !== AUTHORIZED_EMAIL) { feedback('Kont sa a pa gen otorizasyon pou kontwole apèl yo.', true); return; }
+      $('loginButton').disabled = true;
+      try { await signInWithEmailAndPassword(auth, email, $('password').value); }
+      catch (error) { feedback('Koneksyon echwe. Verifye imèl ak modpas ou. (' + error.code + ')', true); $('loginButton').disabled = false; }
+    });
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { reset(); return; }
+      if ((user.email || '').toLowerCase() !== AUTHORIZED_EMAIL) {
+        feedback('Kont sa a pa gen otorizasyon.', true);
+        await signOut(auth);
+        return;
+      }
+      $('loginSection').hidden = true;
+      $('controlSection').hidden = false;
+      $('signedInAs').textContent = 'Konekte kòm: ' + user.email;
+      feedback('');
+      if (stopWatching) stopWatching();
+      stopWatching = onValue(callsRef, (snapshot) => {
+        const value = snapshot.val();
+        renderStatus(typeof value === 'boolean' ? value : null);
+      }, (error) => {
+        renderStatus(null);
+        feedback('Pa kapab li baz done a: ' + error.message, true);
+      });
+    });
+    async function changeCalls(value) {
+      if (busy || currentValue === null) return;
+      busy = true; renderStatus(currentValue);
+      feedback('N ap anrejistre chanjman an…');
+      try { await set(callsRef, value); feedback(value ? 'Apèl yo ouvri. Oditè yo ka kontakte radyo a sou WhatsApp.' : 'Apèl yo fèmen sou sit piblik la.'); }
+      catch (error) { feedback('Chanjman an pa anrejistre: ' + error.message, true); }
+      finally { busy = false; renderStatus(currentValue); }
+    }
+    $('openButton').addEventListener('click', () => changeCalls(true));
+    $('closeButton').addEventListener('click', () => changeCalls(false));
+    $('signOutButton').addEventListener('click', async () => { feedback(''); await signOut(auth); });
+  </script>
+</body>
+</html>
